@@ -38,22 +38,30 @@
 
 
         async function upload() {
+    let fileInput = document.getElementById("file");
+    
+     if (fileInput.files.length === 0) {
+        alert("Veuillez d'abord sélectionner une image !");
+        return; 
+    }
 
-            let file = document.getElementById("file").files[0]
+    let file = fileInput.files[0];
+    let formData = new FormData();
+    formData.append("image", file);
 
-            let formData = new FormData()
-
-            formData.append("image", file)
-
-            await fetch(SERVER + "/upload", {
-                method: "POST",
-                body: formData
-            })
-
-            loadImages()
-
-        }
-
+    try {
+        await fetch(SERVER + "/upload", {
+            method: "POST",
+            body: formData
+        });
+        
+         fileInput.value = ""; 
+        
+        loadImages();
+    } catch (error) {
+        console.error("Erreur lors de l'upload :", error);
+    }
+}
 
         async function loadImages() {
 

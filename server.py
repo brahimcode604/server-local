@@ -1,5 +1,6 @@
 from flask import Flask, request, send_from_directory, jsonify
 from flask_cors import CORS
+from werkzeug.utils import secure_filename # 👈 Ajoute cet import
 import os
 
 app = Flask(__name__)
@@ -10,31 +11,30 @@ UPLOAD_FOLDER = "images"
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# upload image
 @app.route("/upload", methods=["POST"])
 def upload():
+    # Vérifie si la requête contient bien la partie 'image'
+    if 'image' not in request.files:
+        return jsonify({"error": "Aucun fichier envoyé"}), 400
+        
     file = request.files['image']
-    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
-    file.save(filepath)
+    
+    # Vérifie si l'utilisateur a vraiment sélectionné un fichier
+    if file.filename == '':
+        return jsonify({"error": "Aucun fichier sélectionné"}), 400
 
-    return jsonify({
-        "message": "image uploaded",
-        "url": f"/images/{file.filename}"
-    })
+    # Sécurise le nom du fichier
+    if file:
+        filename = secure_filename(file.filename) # 👈 Protège le nom
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(filepath)
 
+        return jsonify({
+            "message": "image uploaded",
+            "url": f"/images/{filename}"
+        })
 
-# list images
-@app.route("/images", methods=["GET"])
-def list_images():
-    files = os.listdir(UPLOAD_FOLDER)
-    return jsonify(files)
-
-
-# get image
-@app.route("/images/<filename>")
-def get_image(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename)
-
+# ... Le reste de ton code (list_images et get_image) est très bien ! ...
 
 if __name__ == "__main__":
     app.run(host="10.66.66.84", port=5000)
