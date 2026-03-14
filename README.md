@@ -55,7 +55,7 @@ Ce projet a été réalisé en collaboration par :
 
 * **Brahim EL BAHLOUL**
   * Étudiant en Master SDA (Sciences de Données et Applications)
-  * Faculté Polydisciplinaire de Safi (FPS) et EST Safi en même temps
+  * Faculté Polydisciplinaire de Safi (FPS) et ÉCOLE SUPÉRIEURE DE TECHNOLOGIE-SAFI(EST) 
   
 * **ABADA Aziz**
   * Étudiant
